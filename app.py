@@ -3,11 +3,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-st.set_page_config(
-    page_title="Dashboard de Tasas Bancarias – BCRA",
-    page_icon="📊",
-    layout="wide"
-)
+st.set_page_config(page_title="Dashboard de Tasas Bancarias – BCRA", page_icon="📊", layout="wide")
 
 st.title("📊 Dashboard de Tasas Bancarias – Datos Reales BCRA")
 
@@ -22,16 +18,12 @@ st.markdown(
 # FUNCIÓN: Obtener TAMAR del BCRA
 # -----------------------
 def obtener_tamar():
-    """
-    Scrapea la página del BCRA para obtener la TAMAR (Tasa Máxima de Interés Efectivo Anual en pesos).
-    """
     url = "https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables.asp"
     try:
         resp = requests.get(url, timeout=10)
         soup = BeautifulSoup(resp.text, "html.parser")
         tabla = soup.find("table", {"class": "table"})
         filas = tabla.find_all("tr")
-
         for fila in filas:
             celdas = [c.get_text(strip=True) for c in fila.find_all("td")]
             if len(celdas) >= 2 and "Tasa de interés" in celdas[0]:
@@ -44,10 +36,6 @@ def obtener_tamar():
 # FUNCIÓN: Obtener TNA por banco (fuente La Nación con datos del BCRA)
 # -----------------------
 def obtener_tna_bancos():
-    """
-    Scrapea la sección de tasas de plazos fijos publicada en La Nación,
-    que refleja los datos oficiales del BCRA.
-    """
     url = "https://www.lanacion.com.ar/economia/plazo-fijo-cual-es-la-tasa-de-interes-banco-por-banco-este-lunes-25-de-agosto-nid25082025/"
     try:
         resp = requests.get(url, timeout=10)
@@ -65,9 +53,6 @@ def obtener_tna_bancos():
 # FUNCIÓN: Tasas del Banco Nación (segmentadas)
 # -----------------------
 def obtener_tasas_bna():
-    """
-    Scrapea la web del Banco Nación para obtener tasas de plazo fijo según plazo.
-    """
     url = "https://www.bna.com.ar/Personas/PlazoFijoTradicional"
     try:
         resp = requests.get(url, timeout=10)
